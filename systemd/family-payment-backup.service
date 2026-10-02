@@ -1,0 +1,13 @@
+[Unit]
+Description=Family Streaming Payment Backup Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /home/ubuntu/workspace/backup_db.py
+WorkingDirectory=/home/ubuntu/workspace
+StandardOutput=append:/home/ubuntu/workspace/logs/backup.log
+StandardError=append:/home/ubuntu/workspace/logs/backup_error.log
+
+[Install]
+WantedBy=multi-user.target

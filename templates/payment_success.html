@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kode Referensi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="success-header">
+            <h1>✅ Pembayaran Berhasil!</h1>
+        </header>
+
+        <div class="payment-details">
+            <h2>Detail Pembayaran:</h2>
+            
+            <div class="detail-item">
+                <strong>Nama Anggota:</strong>
+                <span>{{ member_name }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <strong>Platform:</strong>
+                <span>{{ platform }}</span>
+            </div>
+            
+            <div class="detail-item">
+                <strong>Durasi:</strong>
+                <span>{{ duration }} bulan</span>
+            </div>
+            
+            <div class="detail-item total">
+                <strong>Jumlah Bayar:</strong>
+                <span id="amount">Rp {{ '%,.0f'|format(amount) }}</span>
+            </div>
+            
+            <div class="detail-item reference">
+                <strong>Kode Referensi:</strong>
+                <code>{{ reference_code }}</code>
+            </div>
+            
+            <div class="note">
+                <p>📌 Simpan kode referensi ini untuk tracking pembayaran Anda</p>
+                <p>⏰ Status subscription aktif hingga expired</p>
+            </div>
+        </div>
+
+        <a href="/dashboard" class="btn btn-primary">Lihat Dashboard</a>
+        <a href="/" class="back-link">← Kembali ke beranda</a>
+    </div>
+
+    <script>
+        // Auto copy to clipboard on click
+        document.querySelector('.reference code').addEventListener('click', function() {
+            navigator.clipboard.writeText('{{ reference_code }}');
+            alert('Kode referensi berhasil disalin!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran - {{ member[1] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💳 Buat Pembayaran</h1>
+            <p>Anggota: <strong>{{ member[1] }}</strong></p>
+        </header>
+
+        <form method="POST" class="form-container payment-form">
+            <div class="form-group">
+                <label for="platform">Platform:</label>
+                <select id="platform" name="platform" required>
+                    {% for platform in platforms %}
+                    <option value="{{ platform }}">{{ platform }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="duration">Durasi Pembelian:</label>
+                <select id="duration" name="duration" required onchange="updatePrice()">
+                    {% for dur in durations %}
+                    <option value="{{ dur }}">{{ dur }} bulan</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="price-info" id="price-info">
+                <h3>Total: Rp 75.000 / bulan</h3>
+                <p>Harga akan diupdate otomatis</p>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-large">Buat Pembayaran</button>
+        </form>
+
+        <div class="info-section">
+            <h3>💡 Informasi:</h3>
+            <ul>
+                <li>Pembayaran langsung tercatat otomatis di database</li>
+                <li>Akan mendapat kode referensi untuk tracking</li>
+                <li>Status subscription bisa dicek anytime melalui dashboard</li>
+                <li>Notifikasi akan dikirim sebelum expired</li>
+            </ul>
+        </div>
+
+        <a href="/dashboard" class="back-link">← Kembali ke dashboard</a>
+    </div>
+
+    <script>
+        function updatePrice() {
+            const duration = document.getElementById('duration').value;
+            const pricePerMonth = 75000; // Netflix price
+            const totalPrice = pricePerMonth * duration;
+            
+            document.querySelector('#price-info h3').textContent = 
+                `Total: Rp ${totalPrice.toLocaleString('id-ID')}`;
+        }
+    </script>
+</body>
+</html>

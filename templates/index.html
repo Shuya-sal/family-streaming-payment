@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pembayaran Netflix & YouTube Keluarga</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎬 Sistem Pembayaran Streaming Keluarga</h1>
+            <p>Kelola pembayaran Netflix dan YouTube Premium untuk seluruh anggota keluarga</p>
+        </header>
+
+        <div class="main-actions">
+            <a href="/dashboard" class="btn btn-primary">📊 Dashboard</a>
+            <a href="/register_member" class="btn btn-success">➕ Tambah Anggota Keluarga</a>
+        </div>
+
+        <div class="info-cards">
+            <div class="card">
+                <div class="icon">📺</div>
+                <h3>Netflix</h3>
+                <p>Harga per bulan: Rp 75.000</p>
+            </div>
+            <div class="card">
+                <div class="icon">▶️</div>
+                <h3>YouTube Premium</h3>
+                <p>Harga per bulan: Rp 85.000</p>
+            </div>
+        </div>
+
+        <div class="features">
+            <h2>Fitur Aplikasi:</h2>
+            <ul>
+                <li>✅ Tracking otomatis setiap pembayaran anggota keluarga</li>
+                <li>✅ Pilihan durasi: 1, 2, 3, 6, atau 12 bulan</li>
+                <li>✅ Riwayat pembayaran lengkap</li>
+                <li>✅ Monitoring status subscription aktif</li>
+                <li>✅ Notifikasi otomatis saat akan expired</li>
+                <li>✅ Dashboard real-time untuk monitor semua transaksi</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Family Streaming Payment System</p>
+        </footer>
+    </div>
+</body>
+</html>

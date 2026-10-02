@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Dashboard Pembayaran Keluarga</h1>
+            <p>Monitor semua pembayaran dan subscription anggota keluarga</p>
+            
+            <div class="dashboard-actions">
+                <a href="/register_member" class="btn btn-success">➕ Tambah Anggota</a>
+                <button onclick="refreshData()" class="btn btn-secondary">🔄 Refresh</button>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards" id="summary">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Family Members List -->
+        <div class="members-section">
+            <h2>👨‍👩‍👧‍👦 Daftar Anggota Keluarga</h2>
+            
+            <div class="members-grid">
+                {% for member in members %}
+                <div class="member-card {% if member[6] != 'active' %}expired{% endif %}">
+                    <div class="member-header">
+                        <h3>{{ member[1] }}</h3>
+                        <span class="member-email">{{ member[2] }}</span>
+                        {% if member[3] %}
+                        <span class="member-phone">📞 {{ member[3] }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="payment-info">
+                        {% if member[5] and member[5] != None %}
+                        <div class="active-subscription">
+                            <strong>Status Saat Ini:</strong>
+                            <p>{{ member[5] }} - {{ member[4] }} bulan</p>
+                            <p>Expired: {{ member[6][:10] }}</p>
+                            
+                            {% if member[7] == 'active' %}
+                            <span class="status-badge active">✅ Aktif</span>
+                            {% else %}
+                            <span class="status-badge expired">❌ Expired</span>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <p class="no-payment">Belum ada pembayaran</p>
+                        {% endif %}
+                    </div>
+
+                    <a href="/payment/{{ member[0] }}" class="btn btn-primary">💳 Bayar Sekarang</a>
+                    
+                    <!-- Payment History Button -->
+                    <button onclick="showHistory({{ member[0] }})" class="btn btn-secondary">📜 Riwayat</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Modal for Payment History -->
+        <div id="historyModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeHistory()">&times;</span>
+                <h3>Riwayat Pembayaran</h3>
+                <div id="historyContent"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Family Streaming Payment System</p>
+        </footer>
+    </div>
+
+    <script>
+        async function loadSummary() {
+            try {
+                const response = await fetch('/api/summary');
+                const data = await response.json();
+                
+                document.getElementById('summary').innerHTML = `
+                    <div class="summary-card">
+                        <div class="card-icon">👥</div>
+                        <h3>${data.total_members}</h3>
+                        <p>Total Anggota</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon">💰</div>
+                        <h3>Rp ${data.total_revenue_this_month.toLocaleString('id-ID')}</h3>
+                        <p>Pendapatan Bulan Ini</p>
+                    </div>
+                    <div class="summary-card">
+                        <div class="card-icon">✅</div>
+                        <h3>${data.active_subscriptions}</h3>
+                        <p>Subscription Aktif</p>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading summary:', error);
+            }
+        }
+
+        async function showHistory(memberId) {
+            try {
+                const response = await fetch(`/api/payment_status/${memberId}`);
+                const data = await response.json();
+                
+                let html = '<table>';
+                html += '<tr><th>Tanggal</th><th>Platform</th><th>Durasi</th><th>Jumlah</th><th>Status</th></tr>';
+                
+                data.forEach(payment => {
+                    const statusClass = payment.status === 'active' ? 'status-active' : 'status-expired';
+                    html += `<tr>
+                        <td>${payment.payment_date?.split('T')[0] || ''}</td>
+                        <td>${payment.platform}</td>
+                        <td>${payment.duration} bulan</td>
+                        <td>Rp ${payment.amount.toLocaleString('id-ID')}</td>
+                        <td><span class="${statusClass}">${payment.status}</span></td>
+                    </tr>`;
+                });
+                
+                html += '</table>';
+                document.getElementById('historyContent').innerHTML = html;
+                document.getElementById('historyModal').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading history:', error);
+            }
+        }
+
+        function closeHistory() {
+            document.getElementById('historyModal').style.display = 'none';
+        }
+
+        function refreshData() {
+            location.reload();
+        }
+
+        // Load summary on page load
+        window.addEventListener('load', loadSummary);
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('historyModal');
+            if (event.target == modal) {
+                closeHistory();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: family-streaming-payment
+    env: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -b 0.0.0.0:$PORT app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: PORT
+        value: 5000
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///family_payments.db
+    disk:
+      name: family-streaming-data
+      mountPath: /family-streaming-data
+    healthCheckPath: /
+
+automaticInstallDependencies: true
+branchProtection: false

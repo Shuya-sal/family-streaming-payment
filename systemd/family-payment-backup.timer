@@ -1,0 +1,11 @@
+[Unit]
+Description=Family Streaming Payment Backup Timer
+After=network.target
+
+[Timer]
+OnCalendar=*-*-* 00:00:00
+Persistent=true
+Unit=family-payment-backup.service
+
+[Install]
+WantedBy=timers.target

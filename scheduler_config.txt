@@ -1,0 +1,26 @@
+# Scheduler configuration for automatic tasks
+# Run these commands to set up scheduled tasks
+
+# Option 1: Cron job for daily backup at midnight
+# crontab -e
+# Add this line:
+0 0 * * * /usr/bin/python3 /home/ubuntu/workspace/backup_db.py >> /home/ubuntu/workspace/logs/backup.log 2>&1
+
+# Option 2: Cron job for health check every hour
+# crontab -e
+# Add this line:
+0 * * * * /usr/bin/python3 /home/ubuntu/workspace/health_check.py >> /home/ubuntu/workspace/logs/health.log 2>&1
+
+# Option 3: Create a systemd service (recommended for production)
+# sudo nano /etc/systemd/system/family-payment-backup.service
+[Service]
+ExecStart=/usr/bin/python3 /home/ubuntu/workspace/backup_db.py
+WorkingDirectory=/home/ubuntu/workspace
+StandardOutput=append:/home/ubuntu/workspace/logs/backup.log
+
+[Install]
+WantedBy=multi-user.target
+
+# Enable and start the service:
+# sudo systemctl enable family-payment-backup.timer
+# sudo systemctl start family-payment-backup.timer
