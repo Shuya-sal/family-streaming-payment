@@ -1,0 +1,8 @@
+[build]
+builder = "nixpacks"
+
+[install]
+cmd = "pip install -r requirements.txt"
+
+[start]
+cmd = "gunicorn app:app"
